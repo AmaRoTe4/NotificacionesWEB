@@ -126,6 +126,7 @@ export const createQueryClient = () => (req, res, next) => {
             });
           }
 
+          console.log("Create client succefull");
           return res.json({
             message: "Create client succefull",
             status: true,
@@ -141,6 +142,7 @@ export const createQueryClient = () => (req, res, next) => {
             });
           }
 
+          console.log("Update client succefull");
           return res.json({
             message: "Update client succefull",
             status: true,
@@ -174,16 +176,24 @@ export const sentNotificationNow = () => (req, res, next) => {
         message,
       });
 
-      res.status(200).json({
-        status: true,
-      });
       for (let i = 0; id_users.length > i; i++) {
         const pushSubscripton = results?.find((n) => {
           return n?.id_user.toString() === id_users[i].toString();
         })?.subscription;
 
         if (pushSubscripton) {
+          console.log("Notificacion enviada");
           webpush.sendNotification(JSON.parse(pushSubscripton), payload);
+          res.status(200).json({
+            status: true,
+            message: "Notificacion enviada",
+          });
+        } else {
+          console.log("Notificacion no enviada");
+          res.status(204).json({
+            status: false,
+            message: "Notificacion no enviada",
+          });
         }
       }
 
