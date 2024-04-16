@@ -4,7 +4,7 @@ export default {
     date_notifications: "date_notifications",
     notifications: "notifications",
   },
-  defaultTimer: "*/15 * * * *",
+  defaultTimer: "*/05 * * * * *",
   timer_to_minits: 15,
   path: {
     subscription: "/subscription/",
