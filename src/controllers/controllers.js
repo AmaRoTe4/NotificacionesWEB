@@ -174,14 +174,17 @@ export const sentNotificationNow = () => (req, res, next) => {
         message,
       });
 
-      res.status(200).json();
+      res.status(200).json({
+        status: true,
+      });
       for (let i = 0; id_users.length > i; i++) {
-        const pushSubscripton = results.find((n) => {
-          return n.id_user.toString() === id_users[i].toString();
-        }).subscription;
+        const pushSubscripton = results?.find((n) => {
+          return n?.id_user.toString() === id_users[i].toString();
+        })?.subscription;
 
-        if (pushSubscripton)
+        if (pushSubscripton) {
           webpush.sendNotification(JSON.parse(pushSubscripton), payload);
+        }
       }
 
       return results;

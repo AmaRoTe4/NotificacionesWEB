@@ -9,3 +9,9 @@ const create_query_notification_body = {
     },
   ],
 };
+
+const create_query_notification_now_body = {
+  message: "",
+  title: "",
+  id_users: [""],
+};

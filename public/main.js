@@ -2,26 +2,20 @@ const PUBLIC_VAPID_KEY =
   "BOTIV7sk0o3VgwIpRCMbchjCstgWEwz-c146jeHJHAjVTQ7QxqiGuy6i_MdDvCcb7-WO4czqllUQKsM9XSMziU8";
 
 const id_user = "101010";
+const path_notification = "/subscription";
+const path_notification_now = "/notification_now";
 
 const subscription = async () => {
-  // Service Worker
-  console.log("Registering a Service worker");
   const register = await navigator.serviceWorker.register("/worker.js", {
     scope: "/",
   });
-  console.log("New Service Worker");
 
-  // Listen Push Notifications
-  console.log("Listening Push Notifications");
   const subscription = await register.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY),
   });
 
-  console.log(subscription);
-
-  // Send Notification
-  await fetch("/subscription", {
+  await fetch(path_notification, {
     method: "POST",
     body: JSON.stringify({
       subscription,
@@ -50,9 +44,10 @@ function urlBase64ToUint8Array(base64String) {
 // UI
 const form = document.querySelector("#myform");
 const message = document.querySelector("#message");
+
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  fetch("/notification_now", {
+  fetch(path_notification_now, {
     method: "POST",
     body: JSON.stringify({
       message: message.value,
