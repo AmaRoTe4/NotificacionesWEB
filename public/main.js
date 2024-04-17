@@ -1,5 +1,5 @@
 const PUBLIC_VAPID_KEY =
-  "BOTIV7sk0o3VgwIpRCMbchjCstgWEwz-c146jeHJHAjVTQ7QxqiGuy6i_MdDvCcb7-WO4czqllUQKsM9XSMziU8";
+  "BF8YBHw5XqFca0FzoRAChoGCspvx53MsmHLzXg6oNnhjhfqctWeQC18JxvenI5mIX7ZGBmYW4mScVQTvvMjfcX4";
 
 const id_user = "101010";
 const path_notification = "/subscription";

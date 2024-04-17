@@ -88,18 +88,20 @@ export const createQueryNotification = () => (req, res, next) => {
 };
 
 export const createQueryClient = () => (req, res, next) => {
-  const subscription = req.body.subscription;
-  const id_user = req.body.id_user;
+  const subscription = req.body?.subscription;
+  const id_user = req.body?.id_user;
+  const type = req.body?.type;
 
   const data = {
     id_user,
     id: newUUID(),
     subscription: JSON.stringify(subscription),
     state: 1,
+    type,
   };
 
   const query_select = `SELECT * FROM ${vna.tables.clients} WHERE id_user="${data.id_user}";`;
-  const query_update = `UPDATE ${vna.tables.clients} SET subscription = ?, type = ? state="1" WHERE ${data.id_user}`;
+  const query_update = `UPDATE ${vna.tables.clients} SET subscription = ?, type = ?, state="1" WHERE ${data.id_user}`;
 
   try {
     db.query(query_select, (error, results) => {
@@ -133,7 +135,7 @@ export const createQueryClient = () => (req, res, next) => {
       } else {
         db.query(
           query_update,
-          [data.subscription, data.type],
+          [data.subscription, data?.type],
           (error, results) => {
             if (error) {
               return res.json({
@@ -217,7 +219,7 @@ export const sentNotificationNow = () => (req, res, next) => {
       return results;
     });
   } catch (err) {
-    res.json({ message: err.message, status: false });
+    res.status(500).json({ message: err.message, status: false });
     next(err);
   }
 };
@@ -271,10 +273,15 @@ export const sentNotificationCron = () => {
             });
 
             if (pushSubscripton) {
-              const resultado = await webpush.sendNotification(
+              console.log(pushSubscripton);
+
+              const resultado = await webpush?.sendNotification(
                 JSON.parse(pushSubscripton),
                 payload
               );
+
+              console.log("resultado");
+              console.log(resultado);
 
               if (resultado.statusCode !== 201) {
                 console.log(

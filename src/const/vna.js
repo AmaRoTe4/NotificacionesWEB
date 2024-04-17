@@ -21,4 +21,8 @@ export default {
     all_notification: "/all_notification/",
     all_subscription: "/all_subscription/",
   },
+  status_app: {
+    dev: "dev",
+    product: "product",
+  },
 };

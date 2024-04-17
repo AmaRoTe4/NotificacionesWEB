@@ -7,8 +7,10 @@ import cors from "cors";
 import dotenv from "dotenv";
 import cron from "./src/cron.js";
 import { sentNotificationCron } from "./src/controllers/controllers.js";
-import { PORT } from "./src/config/config.js";
+import config from "./src/config/config.js";
 import vna from "./src/const/vna.js";
+
+const { PORT } = config;
 
 dotenv.config();
 const app = express();
