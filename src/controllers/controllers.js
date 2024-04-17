@@ -159,7 +159,24 @@ export const createQueryClient = () => (req, res, next) => {
 };
 
 export const sentNotificationNow = () => (req, res, next) => {
-  const { message, title, id_users } = req.body;
+  const message = req?.body?.message;
+  const title = req?.body?.title;
+  const id_users = req?.body?.id_users;
+
+  if (
+    message == null ||
+    title == null ||
+    id_users == null ||
+    message.length === 0 ||
+    title.length === 0 ||
+    id_users.length === 0
+  ) {
+    res.status(500).json({
+      status: false,
+      message: "body no valido",
+    });
+    return;
+  }
 
   try {
     db.query(`SELECT * FROM ${vna.tables.clients};`, (error, results) => {
@@ -178,7 +195,7 @@ export const sentNotificationNow = () => (req, res, next) => {
 
       for (let i = 0; id_users.length > i; i++) {
         const pushSubscripton = results?.find((n) => {
-          return n?.id_user.toString() === id_users[i].toString();
+          return n?.id.toString() === id_users[i]?.toString();
         })?.subscription;
 
         if (pushSubscripton) {
@@ -230,11 +247,12 @@ export const sentNotificationCron = () => {
 
       db.query(queryNot, (error, results_not) => {
         if (error) return console.log(error);
-        if (results_not.length === 0) return;
+        if (results_not.length === 0) return console.log("no query client not");
 
         db.query(queryCli, async (error, results_cli) => {
           if (error) return console.log(error);
-          if (results_cli.length === 0) return;
+          if (results_cli.length === 0)
+            return console.log("no query client cli");
 
           for (let i = 0; results_notificaciones_sent.length > i; i++) {
             const aux = results_notificaciones_sent[i];
@@ -244,7 +262,7 @@ export const sentNotificationCron = () => {
             );
 
             const pushSubscripton = results_cli?.find(
-              (n) => n?.id_user.toString() === aux.id_client.toString()
+              (n) => n?.id.toString() === aux.id_client.toString()
             )?.subscription;
 
             const payload = JSON.stringify({
