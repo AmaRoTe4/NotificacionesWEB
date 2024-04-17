@@ -5,6 +5,14 @@ const id_user = "101010";
 const path_notification = "/subscription";
 const path_notification_now = "/notification_now";
 
+function esDispositivoApple() {
+  return /(Macintosh|iPhone|iPod|iPad)/i.test(navigator.userAgent);
+}
+
+const dispositivo = esDispositivoApple();
+
+console.log(dispositivo ? "Apple" : "No Apple");
+
 const subscription = async () => {
   const register = await navigator.serviceWorker.register("/worker.js", {
     scope: "/",
@@ -20,6 +28,7 @@ const subscription = async () => {
     body: JSON.stringify({
       subscription,
       id_user,
+      type: dispositivo ? "2" : "1",
     }),
     headers: {
       "Content-Type": "application/json",
@@ -41,27 +50,10 @@ function urlBase64ToUint8Array(base64String) {
   return outputArray;
 }
 
-// UI
-const form = document.querySelector("#myform");
-const message = document.querySelector("#message");
-
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-  fetch(path_notification_now, {
-    method: "POST",
-    body: JSON.stringify({
-      message: message.value,
-      title: "Hola mundo",
-      id_users: [id_user],
-    }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  form.reset();
-});
-
 // Service Worker Support
-if ("serviceWorker" in navigator) {
-  subscription().catch((err) => console.log(err));
+if (!dispositivo) {
+  if ("serviceWorker" in navigator) {
+    subscription().catch((err) => console.log(err));
+  }
+} else {
 }

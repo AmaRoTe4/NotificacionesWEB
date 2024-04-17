@@ -4,7 +4,11 @@ export default {
     date_notifications: "date_notifications",
     notifications: "notifications",
   },
-  defaultTimer: "*/05 * * * * *",
+  type_dispositivo: {
+    apple: "2",
+    another: "1",
+  },
+  defaultTimer: "*/10 * * * * *",
   timer_to_minits: 15,
   path: {
     subscription: "/subscription/",

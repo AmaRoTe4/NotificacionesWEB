@@ -99,7 +99,7 @@ export const createQueryClient = () => (req, res, next) => {
   };
 
   const query_select = `SELECT * FROM ${vna.tables.clients} WHERE id_user="${data.id_user}";`;
-  const query_update = `UPDATE ${vna.tables.clients} SET subscription = ?, state="1" WHERE ${data.id_user}`;
+  const query_update = `UPDATE ${vna.tables.clients} SET subscription = ?, type = ? state="1" WHERE ${data.id_user}`;
 
   try {
     db.query(query_select, (error, results) => {
@@ -119,35 +119,35 @@ export const createQueryClient = () => (req, res, next) => {
 
         db.query(query_create, values_create, (error, results) => {
           if (error) {
-            console.log(error);
             return res.json({
               message: "Error mysql",
               status: false,
             });
           }
 
-          console.log("Create client succefull");
           return res.json({
             message: "Create client succefull",
             status: true,
           });
         });
       } else {
-        db.query(query_update, [data.subscription], (error, results) => {
-          if (error) {
-            console.log(error);
+        db.query(
+          query_update,
+          [data.subscription, data.type],
+          (error, results) => {
+            if (error) {
+              return res.json({
+                message: "Error mysql",
+                status: false,
+              });
+            }
+
             return res.json({
-              message: "Error mysql",
-              status: false,
+              message: "Update client succefull",
+              status: true,
             });
           }
-
-          console.log("Update client succefull");
-          return res.json({
-            message: "Update client succefull",
-            status: true,
-          });
-        });
+        );
       }
     });
   } catch (err) {
@@ -209,13 +209,14 @@ export const sentNotificationCron = () => {
   const { date, time } = ajustarFechaYHora();
   const first_query = date_notification_sent_cron({ date, time });
 
-  console.log(date, time);
-
   try {
     db.query(first_query, (error, results_notificaciones_sent) => {
       if (error) return console.log(error);
-
-      if (results_notificaciones_sent.length === 0) return;
+      if (results_notificaciones_sent.length === 0) {
+        console.log("no hay notificaciones que mandar");
+        console.log(results_notificaciones_sent);
+        return;
+      }
 
       const { ids_clients, ids_notifications } =
         normalizeIDSNoticationANDClients({
@@ -241,9 +242,11 @@ export const sentNotificationCron = () => {
             const { message, title } = results_not.find(
               (n) => n.id.toString() === aux.id_notificacion.toString()
             );
-            const pushSubscripton = results_cli.find(
-              (n) => n.id.toString() === aux.id_client.toString()
+
+            const pushSubscripton = results_cli?.find(
+              (n) => n?.id_user.toString() === aux.id_client.toString()
             )?.subscription;
+
             const payload = JSON.stringify({
               title,
               message,
@@ -269,6 +272,8 @@ export const sentNotificationCron = () => {
                 );
                 console.log("Notificacion enviada!");
               }
+            } else {
+              console.log("pash subscripton no encotrado");
             }
           }
         });
