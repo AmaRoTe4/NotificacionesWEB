@@ -8,7 +8,7 @@ export default {
     apple: "2",
     another: "1",
   },
-  defaultTimer: "*/10 * * * * *",
+  defaultTimer: "*/3 * * * * *",
   timer_to_minits: 15,
   path: {
     subscription: "/subscription/",

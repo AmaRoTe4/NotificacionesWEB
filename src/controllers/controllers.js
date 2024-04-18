@@ -228,6 +228,8 @@ export const sentNotificationCron = () => {
   const { date, time } = ajustarFechaYHora();
   const first_query = date_notification_sent_cron({ date, time });
 
+  return;
+
   try {
     db.query(first_query, (error, results_notificaciones_sent) => {
       if (error) return console.log(error);
