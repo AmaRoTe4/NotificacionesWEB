@@ -37,32 +37,32 @@ export const selectAllClientsByIds = ({ ids }) => {
 
 export const get_all_next_notifications = `
     SELECT 
-        c.id_user as id_user, 
+        n.id as id,
         n.message as message, 
         dn.status_notificado as status_notificado, 
+        dn.date as date,
+        dn.time as time,
         STR_TO_DATE(CONCAT(dn.date, ' ', dn.time), '%Y-%m-%d %H:%i:%s') AS combined_datetime 
     FROM ${vna.tables.date_notifications} as dn 
         JOIN ${vna.tables.notifications} as n ON n.id=dn.id_notificacion 
-        JOIN ${vna.tables.clients} as c ON c.id_user=dn.id_user
     WHERE
-        c.state="1" AND 
         dn.state="1" AND 
         n.state="1" AND 
         dn.status_notificado='0' 
     ORDER BY combined_datetime ASC;`;
 
 export const get_all_notifications = `
-SELECT 
-    c.id_user as id_user, 
-    n.message as message, 
-    dn.status_notificado as status_notificado, 
-    STR_TO_DATE(CONCAT(dn.date, ' ', dn.time), '%Y-%m-%d %H:%i:%s') AS combined_datetime 
-FROM ${vna.tables.date_notifications} as dn 
-    JOIN ${vna.tables.notifications} as n ON n.id=dn.id_notificacion 
-    JOIN ${vna.tables.clients} as c ON c.id_user=dn.id_user
+SELECT
+    n.id as id,
+    n.message as message,
+    dn.status_notificado as status_notificado,
+    dn.date as date,
+    dn.time as time,
+    STR_TO_DATE(CONCAT(dn.date, ' ', dn.time), '%Y-%m-%d %H:%i:%s') AS combined_datetime
+FROM ${vna.tables.date_notifications} as dn
+    JOIN ${vna.tables.notifications} as n ON n.id=dn.id_notificacion
 WHERE
-    c.state="1" AND 
-    dn.state="1" AND 
+    dn.state="1" AND
     n.state="1"
 ORDER BY combined_datetime ASC;`;
 
