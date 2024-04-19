@@ -9,10 +9,23 @@ import cron from "./src/cron.js";
 import { sentNotificationCron } from "./src/controllers/controllers.js";
 import config from "./src/config/config.js";
 import vna from "./src/const/vna.js";
-
-const { PORT } = config;
+import bot from "./src/bot.js";
 
 dotenv.config();
+
+const { PORT, WEBHOOKDOMAIN, WHPORT } = config;
+
+if (WEBHOOKDOMAIN.length === 0) {
+  bot.startPolling();
+} else {
+  bot.launch({
+    webhook: {
+      domain: WEBHOOKDOMAIN,
+      port: WHPORT,
+    },
+  });
+}
+
 const app = express();
 
 app.use(cors());

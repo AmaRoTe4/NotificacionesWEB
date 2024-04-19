@@ -4,7 +4,7 @@ export const date_notification_sent_cron = ({ time, date }) =>
   `SELECT
     dn.id as id, 
     dn.id_notificacion as id_notificacion, 
-    dn.id_client as id_client 
+    dn.id_user as id_user 
   FROM ${vna.tables.date_notifications} as dn 
     WHERE dn.date='${date}' AND dn.time='${time}' AND dn.status_notificado='0' AND dn.state='1';
   `;
@@ -28,23 +28,22 @@ export const selectAllNotificacionesByIds = ({ ids }) => {
 export const selectAllClientsByIds = ({ ids }) => {
   const where_ids = ids
     .map((n) => {
-      return `c.id="${n}"`;
+      return `c.id_user="${n}"`;
     })
     .join(" OR ");
 
   return `SELECT * FROM ${vna.tables.clients} as c WHERE c.state='1' AND (${where_ids});`;
 };
 
-export const get_all_notifications_by_data_and_time_no_view = `
+export const get_all_next_notifications = `
     SELECT 
         c.id_user as id_user, 
         n.message as message, 
-        n.title as title,
         dn.status_notificado as status_notificado, 
         STR_TO_DATE(CONCAT(dn.date, ' ', dn.time), '%Y-%m-%d %H:%i:%s') AS combined_datetime 
     FROM ${vna.tables.date_notifications} as dn 
         JOIN ${vna.tables.notifications} as n ON n.id=dn.id_notificacion 
-        JOIN ${vna.tables.clients} as c ON c.id=dn.id_client
+        JOIN ${vna.tables.clients} as c ON c.id_user=dn.id_user
     WHERE
         c.state="1" AND 
         dn.state="1" AND 
@@ -52,16 +51,15 @@ export const get_all_notifications_by_data_and_time_no_view = `
         dn.status_notificado='0' 
     ORDER BY combined_datetime ASC;`;
 
-export const get_all_notifications_by_data_and_time = `
+export const get_all_notifications = `
 SELECT 
     c.id_user as id_user, 
     n.message as message, 
-    n.title as title,
     dn.status_notificado as status_notificado, 
     STR_TO_DATE(CONCAT(dn.date, ' ', dn.time), '%Y-%m-%d %H:%i:%s') AS combined_datetime 
 FROM ${vna.tables.date_notifications} as dn 
     JOIN ${vna.tables.notifications} as n ON n.id=dn.id_notificacion 
-    JOIN ${vna.tables.clients} as c ON c.id=dn.id_client
+    JOIN ${vna.tables.clients} as c ON c.id_user=dn.id_user
 WHERE
     c.state="1" AND 
     dn.state="1" AND 

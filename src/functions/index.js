@@ -93,7 +93,6 @@ export function ajustarFechaYHora() {
 
   // Devolver la fecha y hora ajustada
   let fechaHoraAjustada = { time: hora + ":" + minutos + ":00", date: fecha };
-
   return fechaHoraAjustada;
 }
 
@@ -105,9 +104,9 @@ export function normalizeIDSNoticationANDClients({ array }) {
 
   aux_results_notificaciones_sent.map((n) => {
     const id_notificacion = n.id_notificacion;
-    const id_client = n.id_client;
+    const id_user = n.id_user;
 
-    if (!ids_clients.includes(id_client)) ids_clients.push(id_client);
+    if (!ids_clients.includes(id_user)) ids_clients.push(id_user);
     if (!ids_notifications.includes(id_notificacion))
       ids_notifications.push(id_notificacion);
   });
