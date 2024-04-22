@@ -21,7 +21,6 @@ if (WEBHOOKDOMAIN.length === 0) {
   bot.launch({
     webhook: {
       domain: WEBHOOKDOMAIN,
-      port: WHPORT,
     },
   });
 }
