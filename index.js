@@ -34,7 +34,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use(router);
-app.use(express.static(path.join(dirname, "public")));
+//app.use(express.static(path.join(dirname, "public")));
 
 cron({
   funcion: sentNotificationCron,

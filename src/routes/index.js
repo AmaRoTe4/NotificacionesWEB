@@ -10,13 +10,12 @@ import {
   lowLogicClientByIdUser,
   getAllNextNotification,
 } from "../controllers/controllers.js";
+import { validarClave } from "../validations/index.js";
 
 const router = Router();
 
-//router.post(vna.path.subscription, (req, res, next) => {
-//  const middleware = createQueryClient();
-//  middleware(req, res, next);
-//});
+router.get("/*", validarClave);
+router.post("/*", validarClave);
 
 router.post(vna.path.notification_now, async (req, res, next) => {
   const middleware = sentNotificationNow();

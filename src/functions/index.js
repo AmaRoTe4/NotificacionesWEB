@@ -57,33 +57,26 @@ export function generarConsultaCreateMany(tabla, registros) {
 }
 
 export function ajustarFechaYHora() {
-  // Obtener la fecha y hora actual en la zona horaria local
   let now = new Date();
-
-  // Ajustar los minutos según la lógica proporcionada
   let minutos = now.getMinutes();
 
-  if (minutos < 15) {
+  if (minutos >= 53 || 7 >= minutos) {
     now.setMinutes(0);
-  } else if (minutos < 45) {
+    if (59 <= minutos) now.setHours(now.getHours() + 1);
+  } else if (minutos >= 8 && 22 >= minutos) {
+    now.setMinutes(15);
+  } else if (minutos >= 23 && 37 >= minutos) {
     now.setMinutes(30);
-  } else {
-    now.setMinutes(0);
-    now.setHours(now.getHours() + 1);
+  } else if (minutos >= 38 && 52 >= minutos) {
+    now.setMinutes(45);
   }
 
   now.setSeconds(0);
   now.setMilliseconds(0);
 
-  // Convertir la fecha y hora a la zona horaria de Argentina
-  const options = { timeZone: "America/Argentina/Buenos_Aires", hour12: false };
-  const fechaHoraArgentina = now.toLocaleString("es-AR", options);
-
-  // Formatear la hora y los minutos con ceros a la izquierda si es necesario
   let hora = ("0" + now.getHours()).slice(-2);
   minutos = ("0" + now.getMinutes()).slice(-2);
 
-  // Formatear la fecha en formato YYYY-MM-DD
   let fecha =
     now.getFullYear() +
     "-" +
@@ -91,7 +84,6 @@ export function ajustarFechaYHora() {
     "-" +
     ("0" + now.getDate()).slice(-2);
 
-  // Devolver la fecha y hora ajustada
   let fechaHoraAjustada = { time: hora + ":" + minutos + ":00", date: fecha };
   return fechaHoraAjustada;
 }
