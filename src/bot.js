@@ -7,6 +7,8 @@ const { TOKEN_CHAT_TELEGRAM } = config;
 const bot = new Telegraf(TOKEN_CHAT_TELEGRAM);
 
 bot.use((ctx, next) => {
+  console.log(ctx);
+
   return next();
 });
 

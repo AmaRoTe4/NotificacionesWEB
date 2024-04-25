@@ -16,6 +16,7 @@ export default process.env.STATUS === vna.status_app.dev
       WEBHOOKDOMAIN: "",
       WHPORT: "",
       CLAVE: process.env.CLAVE,
+      STATUS: process.env.STATUS,
     }
   : {
       HOST: process.env.HOST || "localhost",
@@ -29,4 +30,5 @@ export default process.env.STATUS === vna.status_app.dev
       WEBHOOKDOMAIN: process.env.WEBHOOKDOMAIN,
       WHPORT: process.env.WHPORT,
       CLAVE: process.env.CLAVE,
+      STATUS: process.env.STATUS,
     };

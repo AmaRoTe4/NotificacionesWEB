@@ -13,16 +13,12 @@ import bot from "./src/bot.js";
 
 dotenv.config();
 
-const { PORT, WEBHOOKDOMAIN, WHPORT } = config;
+const { PORT, WEBHOOKDOMAIN, STATUS } = config;
 
-if (WEBHOOKDOMAIN.length === 0) {
-  bot.startPolling();
+if (STATUS === vna.status_app.dev) {
+  bot.launch();
 } else {
-  bot.launch({
-    webhook: {
-      domain: WEBHOOKDOMAIN,
-    },
-  });
+  bot.telegram.setWebhook(WEBHOOKDOMAIN);
 }
 
 const app = express();
